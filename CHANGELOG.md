@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.8.2] - 2021-12-21
+### Fixed
+- Add support for Ruby 3.x.x.
+
 ## [0.8.1] - 2021-05-24
 ### Fixed
 - Reorder the attributes output for `PunchoutSetupRequest`.
