@@ -35,7 +35,7 @@ module CXML
       data = data.serializable_hash if data.is_a?(self.class)
       return unless data.is_a?(Hash)
 
-      data.each(&method(:initialize_attribute))
+      data.each { |arr| initialize_attribute(*arr) }
     end
 
     def serializable_hash
