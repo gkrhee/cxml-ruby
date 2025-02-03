@@ -19,7 +19,7 @@ module CXML
     end
 
     def document
-      doc = Ox.load(data)
+      doc = Ox.load(data, mode: :generic)
       @doc_type_string = doc.nodes.detect do |node|
         node.value&.match?(/^cXML /)
       end&.value
