@@ -48,55 +48,37 @@ module CXML
       end
     end
 
-    def node_name
-      self.class.name.split('::').last
+    def render(node = CXML.builder)
+      node.send(self.class.name.split('::').last, node_attributes) do |n|
+        n.text(content) if content
+        render_nodes(n)
+      end
+      node
     end
 
-    def to_element
-      element = ox_element
-      element << content.to_s if content
+    def render_nodes(node)
       self.class.nodes.each do |child_node_name|
         child_value = send(child_node_name)
         if child_value.is_a?(Array)
           child_value.each do |child_value_n|
-            render_child_node(element, child_node_name, child_value_n)
+            render_child_node(node, child_node_name, child_value_n)
           end
         else
-          render_child_node(element, child_node_name, child_value)
+          render_child_node(node, child_node_name, child_value)
         end
       end
-      element
     end
 
     private
 
-    def ox_element
-      element = Ox::Element.new node_name
-      node_attributes.each do |key, val|
-        element[key] = val
-      end
-      element
-    end
-
-    def render_child_node(element, name, value)
+    def render_child_node(node, name, value)
       return if value.respond_to?(:empty?) ? value.empty? : !value
 
       if value.is_a?(DocumentNode)
-        element << value.to_element
-        return element
-      end
-      value_element = Ox::Element.new(camelize(name))
-      if value.is_a? Hash
-        value.each do |value_key, value_val|
-          next value_element << value_val.to_s if value_key == :content
-
-          value_element[value_key] = value_val
-        end
+        value.render(node)
       else
-        value_element << value.to_s
+        node.send(camelize(name), value)
       end
-      element << value_element
-      element
     end
 
     def node_attributes

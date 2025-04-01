@@ -56,9 +56,16 @@ module CXML
       self
     end
 
-    def to_xml(doc = ox_doc)
-      doc << to_element
-      Ox.dump doc
+    def to_xml
+      node = Nokogiri::XML::Builder.new(encoding: 'UTF-8')
+      node.doc.create_internal_subset(dtd, nil, dtd_url)
+      node.cXML(node_attributes) do |doc|
+        header&.render(doc)
+        request&.render(doc)
+        response&.render(doc)
+        message&.render(doc)
+      end
+      node.to_xml
     end
 
     def node_name
@@ -67,18 +74,6 @@ module CXML
 
     def dtd_url
       "http://xml.cxml.org/schemas/cXML/#{version}/#{dtd}.dtd"
-    end
-
-    private
-
-    def ox_doc
-      doc = Ox::Document.new
-      instruct = Ox::Instruct.new(:xml)
-      instruct[:version] = '1.0'
-      instruct[:encoding] = 'UTF-8'
-      doc << instruct
-      doc << Ox::DocType.new("cXML SYSTEM \"#{dtd_url}\"")
-      doc
     end
   end
 end

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require('xmlsimple')
+
 module CXML
   class Parser
     attr_accessor :data,
@@ -10,7 +12,7 @@ module CXML
     end
 
     def parse
-      @parsed_data = node_to_hash document
+      @parsed_data = transform_hash document
       if dtd_url
         @parsed_data[:version] = version
         @parsed_data[:dtd] = dtd
@@ -19,13 +21,7 @@ module CXML
     end
 
     def document
-      doc = Ox.load(data, mode: :generic)
-      @doc_type_string = doc.nodes.detect do |node|
-        node.value&.match?(/^cXML /)
-      end&.value
-      doc.nodes.detect do |node|
-        node.value&.match?(/^cxml$/i)
-      end || doc
+      XmlSimple.xml_in(data, { 'ForceArray' => false })
     end
 
     def version
@@ -44,27 +40,9 @@ module CXML
 
     private
 
-    def node_to_hash(node)
-      return node.value if node.is_a?(Ox::CData)
-      return node if node.is_a? String
-      return node.nodes.first if node.nodes.all?(String) && node.attributes.empty?
-
-      transform_node_to_hash node
-    end
-
-    def transform_node_to_hash(node)
-      hash = node.attributes
+    def transform_hash(hash)
       hash.transform_keys!(&method(:underscore_key))
-      node.nodes.reduce(hash) do |acc, child_node|
-        next acc if child_node.is_a?(Ox::Comment)
-
-        node_hash = {}
-        name = child_node.is_a?(String) || child_node.is_a?(Ox::CData) ? :content : child_node.value
-        node_hash[underscore_key(name)] = node_to_hash(child_node)
-        acc.merge(node_hash) do |_key, val1, val2|
-          [val1, val2].flatten
-        end
-      end
+      hash.transform_values!(&method(:underscore_hash_values))
     end
 
     def underscore_key(key)
@@ -76,6 +54,15 @@ module CXML
       word.tr!('-', '_')
       word.downcase!
       word.to_sym
+    end
+
+    def underscore_hash_values(value)
+      return value.map(&method(:underscore_hash_values)) if value.is_a?(Array)
+      return value unless value.is_a?(Hash)
+
+      value.transform_keys!(&method(:underscore_key))
+      value.transform_values!(&method(:underscore_hash_values))
+      value
     end
   end
 end

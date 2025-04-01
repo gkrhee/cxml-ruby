@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require('time')
+require('nokogiri')
 require('logger')
-require('ox')
 require('cxml/document_node')
 Dir[File.join(__dir__, 'cxml', '*.rb')].sort.each { |file| require file }
 
