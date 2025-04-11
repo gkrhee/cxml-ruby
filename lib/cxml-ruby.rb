@@ -4,6 +4,7 @@ require('time')
 require('nokogiri')
 require('logger')
 require('cxml/document_node')
+Dir[File.join(__dir__, 'cxml', 'mixins', '*.rb')].sort.each { |file| require file }
 Dir[File.join(__dir__, 'cxml', '*.rb')].sort.each { |file| require file }
 
 module CXML

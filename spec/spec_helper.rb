@@ -3,7 +3,7 @@
 $LOAD_PATH.unshift File.expand_path('..', __dir__)
 
 require 'cxml-ruby'
-require 'pry'
+require 'pry-debugger-jruby'
 
 Dir['./spec/support/**/*.rb'].sort.each { |f| require f }
 

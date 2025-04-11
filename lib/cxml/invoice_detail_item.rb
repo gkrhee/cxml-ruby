@@ -2,6 +2,8 @@
 
 module CXML
   class InvoiceDetailItem < DocumentNode
+    include Extrinsicable
+
     accessible_attributes %i[
       composite_item_type
       inspection_date
@@ -26,7 +28,6 @@ module CXML
       net_amount
       distribution
       comments
-      extrinsics
       invoice_detail_item_industry
       invoice_item_modifications
       packaging
@@ -37,19 +38,5 @@ module CXML
       total_amount_without_tax
       total_charges
     ]
-
-    def initialize_extrinsic(value)
-      value = [value] unless value.is_a?(Array)
-      @extrinsics = value.map do |item|
-        Extrinsic.new(item)
-      end
-    end
-
-    def initialize_extrinsics(value)
-      value = [value] unless value.is_a?(Array)
-      @extrinsics = value.map do |item|
-        Extrinsic.new(item)
-      end
-    end
   end
 end

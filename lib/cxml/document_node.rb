@@ -19,7 +19,11 @@ module CXML
     def self.accessible_nodes(new_nodes)
       raise(ArgumentError) unless new_nodes.is_a?(Array)
 
-      @nodes = new_nodes
+      @nodes = if @nodes
+                 @nodes + new_nodes
+               else
+                 new_nodes
+               end
       attr_accessor(*new_nodes)
     end
 

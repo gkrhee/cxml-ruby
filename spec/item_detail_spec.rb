@@ -20,6 +20,20 @@ describe CXML::ItemDetail do
       item_detail.description.should_not be_nil
       item_detail.unit_price.should_not be_nil
     end
+
+    it 'can add extrinsics' do
+      item_detail.set_extrinsic("test", "test value")
+      item_detail.extrinsics.should_not be_nil
+      item_detail.extrinsics.first.name.should eq("test")
+    end
+
+    it 'can change extrinsic value' do
+      item_detail.set_extrinsic('test', 'test value')
+      item_detail.set_extrinsic('test', 'test value 2')
+      item_detail.extrinsics.size.should eq(1)
+      item_detail.extrinsics.first.name.should eq("test")
+      item_detail.extrinsics.first.content.should eq("test value 2")
+    end
   end
 
   describe '#render' do

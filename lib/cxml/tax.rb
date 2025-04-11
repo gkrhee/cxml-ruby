@@ -2,13 +2,14 @@
 
 module CXML
   class Tax < DocumentNode
+    include Extrinsicable
+
     accessible_nodes %i[
       money
       tax_adjustment_amount
       description
       tax_details
       distribution
-      extrinsics
     ]
 
     def initialize_tax_detail(value)
@@ -22,20 +23,6 @@ module CXML
       value = [value] unless value.is_a?(Array)
       @tax_details = value.map do |item|
         TaxDetail.new(item)
-      end
-    end
-
-    def initialize_extrinsic(value)
-      value = [value] unless value.is_a?(Array)
-      @extrinsics = value.map do |item|
-        Extrinsic.new(item)
-      end
-    end
-
-    def initialize_extrinsics(value)
-      value = [value] unless value.is_a?(Array)
-      @extrinsics = value.map do |item|
-        Extrinsic.new(item)
       end
     end
   end

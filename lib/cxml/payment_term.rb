@@ -2,27 +2,14 @@
 
 module CXML
   class PaymentTerm < DocumentNode
+    include Extrinsicable
+
     accessible_attributes %i[
       pay_in_number_of_days
     ]
     accessible_nodes %i[
       discount
-      extrinsics
       net_due_days
     ]
-
-    def initialize_extrinsic(value)
-      value = [value] unless value.is_a?(Array)
-      @extrinsics = value.map do |item|
-        Extrinsic.new(item)
-      end
-    end
-
-    def initialize_extrinsics(value)
-      value = [value] unless value.is_a?(Array)
-      @extrinsics = value.map do |item|
-        Extrinsic.new(item)
-      end
-    end
   end
 end

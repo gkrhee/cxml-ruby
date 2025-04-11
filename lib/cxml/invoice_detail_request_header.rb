@@ -2,6 +2,8 @@
 
 module CXML
   class InvoiceDetailRequestHeader < DocumentNode
+    include Extrinsicable
+
     accessible_attributes %i[
       invoice_date
       invoice_id
@@ -20,7 +22,6 @@ module CXML
       payment_term
       period
       comments
-      extrinsics
     ]
 
     def initialize_invoice_partner(value)
@@ -34,20 +35,6 @@ module CXML
       value = [value] unless value.is_a?(Array)
       @invoice_partners = value.map do |item|
         InvoicePartner.new(item)
-      end
-    end
-
-    def initialize_extrinsic(value)
-      value = [value] unless value.is_a?(Array)
-      @extrinsics = value.map do |item|
-        Extrinsic.new(item)
-      end
-    end
-
-    def initialize_extrinsics(value)
-      value = [value] unless value.is_a?(Array)
-      @extrinsics = value.map do |item|
-        Extrinsic.new(item)
       end
     end
   end

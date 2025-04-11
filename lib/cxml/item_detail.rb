@@ -2,6 +2,8 @@
 
 module CXML
   class ItemDetail < DocumentNode
+    include Extrinsicable
+
     accessible_nodes %i[
       unit_price
       description
@@ -11,21 +13,6 @@ module CXML
       manufacturer_name
       url
       lead_time
-      extrinsics
     ]
-
-    def initialize_extrinsic(value)
-      value = [value] unless value.is_a?(Array)
-      @extrinsics = value.map do |item|
-        Extrinsic.new(item)
-      end
-    end
-
-    def initialize_extrinsics(value)
-      value = [value] unless value.is_a?(Array)
-      @extrinsics = value.map do |item|
-        Extrinsic.new(item)
-      end
-    end
   end
 end

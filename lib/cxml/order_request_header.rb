@@ -3,6 +3,8 @@
 module CXML
   # body header of purchase order request
   class OrderRequestHeader < DocumentNode
+    include Extrinsicable
+
     accessible_attributes %i[
       agreement_id
       agreement_payload_id
@@ -35,7 +37,6 @@ module CXML
       followup
       document_reference
       supplier_order_info
-      extrinsics
       control_keys
       delivery_period
       followup
@@ -48,20 +49,6 @@ module CXML
 
     def type
       @type || 'new'
-    end
-
-    def initialize_extrinsic(value)
-      value = [value] unless value.is_a?(Array)
-      @extrinsics = value.map do |item|
-        Extrinsic.new(item)
-      end
-    end
-
-    def initialize_extrinsics(value)
-      value = [value] unless value.is_a?(Array)
-      @extrinsics = value.map do |item|
-        Extrinsic.new(item)
-      end
     end
   end
 end
