@@ -13,9 +13,8 @@ Gem::Specification.new do |s|
   s.email       = ['josh@officeluv.com', 'eleni@officeluv.com']
 
   s.required_ruby_version = '>= 2.4'
-  # s.add_dependency('ox', '~> 2.13')
   s.add_dependency('nokogiri', '~> 1.10')
-  s.add_dependency('xml-simple', '~> 1.1')
+  s.add_dependency('nori', '~> 2.6')
 
   s.add_development_dependency('pry-debugger-jruby')
   s.add_development_dependency('rake', '~> 13.0')

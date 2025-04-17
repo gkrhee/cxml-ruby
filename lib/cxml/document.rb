@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require('nokogiri')
+
 module CXML
   class Document < DocumentNode
     attr_writer :dtd
