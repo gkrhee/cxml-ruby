@@ -14,10 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.8.3] - 2025-04-16
+## [1.0.0] - 2025-04-17
+### Changed
+- Drop XmlSimple and replace with Nori
+
+## [0.8.3] - 2025-04-01
 ### Changed
 - Drop Ox in order to revive Nokogiri usage so the gem can run on jruby.
-- Drop XmlSimple and replace with Nori
 
 ## [0.8.2] - 2021-12-21
 ### Fixed
