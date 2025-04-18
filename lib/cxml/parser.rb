@@ -1,6 +1,20 @@
 # frozen_string_literal: true
 
-require('xmlsimple')
+require('nokogiri')
+require('nori')
+
+Nori::StringWithAttributes.class_eval do
+  def [](*args)
+    val = attributes[args.first] if args.count > 0
+    val || super
+  end
+  def ==(other)
+    if other.is_a?(Hash)
+      return true if {content: self.to_s}.merge(attributes) == other
+    end
+    super
+  end
+end
 
 module CXML
   class Parser
@@ -21,7 +35,10 @@ module CXML
     end
 
     def document
-      XmlSimple.xml_in(data, { 'ForceArray' => false })
+      attribute_converter = lambda { |tag| tag.start_with?("@") ? tag.gsub(/@/, "") : tag }
+      hash = Nori.new(parser: :nokogiri, convert_tags_to: attribute_converter).parse(data)
+      hash = hash.first[1] if hash.is_a?(Hash) && !hash.empty?
+      hash
     end
 
     def version
@@ -58,6 +75,9 @@ module CXML
 
     def underscore_hash_values(value)
       return value.map(&method(:underscore_hash_values)) if value.is_a?(Array)
+      if value.is_a?(Nori::StringWithAttributes)
+        value.attributes.transform_keys!(&method(:underscore_key))
+      end
       return value unless value.is_a?(Hash)
 
       value.transform_keys!(&method(:underscore_key))

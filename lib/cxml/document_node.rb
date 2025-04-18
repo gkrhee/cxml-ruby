@@ -32,6 +32,11 @@ module CXML
     end
 
     def initialize(data = {})
+      if data.is_a?(Nori::StringWithAttributes)
+        @content = data
+        data.attributes.each { |arr| initialize_attribute(*arr) }
+        return
+      end
       if data.is_a?(String)
         @content = data
         return
@@ -88,6 +93,7 @@ module CXML
     def node_attributes
       self.class.attributes.each_with_object({}) do |attr, obj|
         value = send(attr)
+        value = content.attributes[attr] if value.nil? && content.is_a?(Nori::StringWithAttributes)
         value = value.iso8601 if value.is_a?(Time)
         next if value.respond_to?(:empty?) ? value.empty? : !value
 
