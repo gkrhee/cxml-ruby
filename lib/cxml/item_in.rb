@@ -9,6 +9,8 @@ module CXML
     accessible_nodes %i[
       item_id
       item_detail
+      shipping
+      tax
     ]
   end
 end
